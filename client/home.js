@@ -18,9 +18,11 @@ $(function() {
 			data: {
 				word: word.val()
 			},
+			dataType: 'json',
 			async: false,
-			success: function() {
-				if(words.html().length > 0) {
+			success: function(data) {
+				console.log(data);
+				if(data.wordnum > 1) {
 					words.html(words.html() + ', ' + word.val());
 				} else {
 					words.html(word.val());

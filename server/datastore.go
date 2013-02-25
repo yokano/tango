@@ -6,6 +6,7 @@ import (
 	"appengine/datastore"
 	"appengine/user"
 	"strings"
+	"fmt"
 )
 
 // データストアのデータ型
@@ -41,6 +42,9 @@ func add(w http.ResponseWriter, r *http.Request) {
 	// データストアへの書き込み
 	key, err = datastore.Put(c, key, entity)
 	Check(c, err)
+	
+	// 現在の単語数を返す
+	fmt.Fprintf(w, "{\"wordnum\":%d}", len(entity.Words))
 }
 
 /**
