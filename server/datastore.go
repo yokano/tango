@@ -5,15 +5,20 @@ import (
 	"appengine"
 	"appengine/datastore"
 	"appengine/user"
+	"strings"
 )
+
+// データストアのデータ型
+type Entity struct {
+	Words []string
+}
+
 
 /**
  * データストアに単語を追加する
+ * ajaxから呼び出すためのAPI
  */
 func add(w http.ResponseWriter, r *http.Request) {
-	type Entity struct {
-		Words []string
-	}
 	var c appengine.Context
 	var u *user.User
 	var key *datastore.Key
@@ -36,4 +41,24 @@ func add(w http.ResponseWriter, r *http.Request) {
 	// データストアへの書き込み
 	key, err = datastore.Put(c, key, entity)
 	Check(c, err)
+}
+
+/**
+ * 単語リストを取得
+ * サーバから使用する
+ */
+func getWordsHTML(c appengine.Context, u *user.User) string {
+	var result string
+	var key *datastore.Key
+	var entity *Entity
+	
+	// 単語リストの取得
+	key = datastore.NewKey(c, "words", u.ID, 0, nil)
+	entity = new(Entity)
+	datastore.Get(c, key, entity)
+	
+	// 結合
+	result = strings.Join(entity.Words, ", ")
+	
+	return result
 }

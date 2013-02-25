@@ -27,6 +27,8 @@ func top(w http.ResponseWriter, r *http.Request) {
 		contents["ID"] = u.ID
 		contents["NAME"] = u.Email
 		contents["LOGOUT_URL"], _ = user.LogoutURL(c, "")
+		contents["Words"] = getWordsHTML(c, u)
+		
 		t, _ := template.ParseFiles("client/home.html")
 		t.Execute(w, contents)
 	}

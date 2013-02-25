@@ -4,5 +4,8 @@ runtime: go
 api_version: go1
 
 handlers:
+- url: /client/(.*).js
+  static_files: client/\1.js
+  upload: client/(.*).js
 - url: /.*
   script: _go_app

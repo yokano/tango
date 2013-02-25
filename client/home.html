@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<script src="/client/home.js"></script>
 	</head>
 	<body>
 		<h1>単語帳オンライン</h1>
@@ -23,11 +24,13 @@
 			<a href="/clear">全消し</a>
 		</div>
 		<div>
-			<input type="text"></input>
-			<input type="button" value="追加する"></input>
+			<input type="text" id="word"></input>
+			<input type="button" value="追加する" id="add"></input>
 		</div>
 		<hr/>
 		<h2>単語一覧</h2>
-		{{.Words}}
+		<ul>
+			{{.Words}}
+		</ul>
 	</body>
 </html>
