@@ -72,7 +72,21 @@ func clear(w http.ResponseWriter, r *http.Request) {
 }
 
 /**
- * 単語リストを取得
+ * すべての単語リストを取得する
+ */
+func get(c appengine.Context, u *user.User) []string {
+	var entity *Entity
+	var key *datastore.Key
+	
+	entity = new(Entity)
+	key = datastore.NewKey(c, "words", u.ID, 0, nil)
+	datastore.Get(c, key, entity)
+	
+	return entity.Words
+}
+
+/**
+ * 単語リストをHTML形式で返す
  * サーバから使用する
  */
 func getWordsHTML(c appengine.Context, u *user.User) string {

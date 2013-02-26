@@ -7,5 +7,11 @@ handlers:
 - url: /client/(.*).js
   static_files: client/\1.js
   upload: client/(.*).js
+- url: /client/(.*).css
+  static_files: client/\1.css
+  upload: client/(.*).css
+- url: /client/(.*).png
+  static_files: client/\1.png
+  upload: client/(.*).png
 - url: /.*
   script: _go_app
