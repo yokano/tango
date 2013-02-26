@@ -24,7 +24,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 	contents = new(Contents)
 	contents.Words = get(c, u)
 	
-	t, err = template.ParseFiles("client/play.html")
+	t, err = template.ParseFiles("server/play.html")
 	Check(c, err)
 	t.Execute(w, contents)
 }

@@ -19,7 +19,7 @@ func top(w http.ResponseWriter, r *http.Request) {
 	if u == nil {
 		contents := make(map[string]string)
 		contents["LOGIN_URL"], _ = user.LoginURL(c, "")
-		t, _ := template.ParseFiles("client/login.html")
+		t, _ := template.ParseFiles("server/login.html")
 		t.Execute(w, contents)
 	} else {
 		// ログインしている
@@ -29,7 +29,7 @@ func top(w http.ResponseWriter, r *http.Request) {
 		contents["LOGOUT_URL"], _ = user.LogoutURL(c, "")
 		contents["Words"] = getWordsHTML(c, u)
 		
-		t, _ := template.ParseFiles("client/home.html")
+		t, _ := template.ParseFiles("server/home.html")
 		t.Execute(w, contents)
 	}
 }
