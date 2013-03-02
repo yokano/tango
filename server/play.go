@@ -2,29 +2,45 @@ package tango
 
 import (
 	"net/http"
-	"html/template"
+	"text/template"
 	"appengine"
 	"appengine/user"
+	"strings"
 )
 
+/**
+ * 単語学習ページの表示
+ * play.html 学習ページ全体のテンプレート
+ */
 func play(w http.ResponseWriter, r *http.Request) {
+	type Contents struct {
+		Words string
+	}
+	
 	var c appengine.Context
 	var u *user.User
-	type Contents struct {
-		Words []string
-	}
 	var contents *Contents
-	var t *template.Template
 	var err error
-	
+	var page *template.Template
+	var words []string
+
 	c = appengine.NewContext(r)
 	u = user.Current(c)
 	
 	// 単語一覧を取得
 	contents = new(Contents)
-	contents.Words = get(c, u)
+	words = get(c, u)
 	
-	t, err = template.ParseFiles("server/play.html")
+	// ページテンプレート取得
+	page, err = template.ParseFiles("server/play.html")
 	Check(c, err)
-	t.Execute(w, contents)
+	
+	// 単語一覧をHTML内に書き込む
+	for i := 0; i < len(words); i++ {
+		words[i] = strings.Join([]string{"\"", words[i], "\""}, "")
+	}
+	contents.Words = strings.Join(words, ",")
+	
+	// 表示
+	page.Execute(w, contents)
 }

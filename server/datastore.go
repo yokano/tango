@@ -7,6 +7,7 @@ import (
 	"appengine/user"
 	"strings"
 	"fmt"
+	"log"
 )
 
 // データストアのデータ型
@@ -26,6 +27,10 @@ func add(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var entity *Entity
 	var word string
+	var resp *http.Response
+	var client *http.Client
+	var request *http.Request
+	var result []byte
 	
 	c = appengine.NewContext(r)
 	u = user.Current(c)
@@ -42,9 +47,21 @@ func add(w http.ResponseWriter, r *http.Request) {
 	// データストアへの書き込み
 	key, err = datastore.Put(c, key, entity)
 	Check(c, err)
+
+	// 意味を付加する
+	request, err = http.NewRequest("GET", "https://api.datamarket.azure.com/Bing/MicrosoftTranslator/v1/Translate?Text=%27word%27&To=%27ja%27", nil)
+	Check(c, err)
+	request.SetBasicAuth("", "BY/r96i694uamK+xuSv/6PrzIkfjraA1XFXIhzJ/4tE=")
+	client = new(http.Client)
+	resp, err = client.Do(request)
+	Check(c, err)
+	result = make([]byte, 100)
+	_, err = resp.Body.Read(result)
+	Check(c, err)
+	log.Printf("%s", result)
 	
 	// 現在の単語数を返す
-	fmt.Fprintf(w, "{\"wordnum\":%d}", len(entity.Words))
+	fmt.Fprintf(w, "{\"wordnum\":%d, \"status\":\"%s\"}", len(entity.Words), resp.Status)
 }
 
 /**
