@@ -8,6 +8,7 @@ import (
 	"strings"
 	"fmt"
 	"log"
+	"encoding/xml"
 )
 
 // データストアのデータ型
@@ -15,12 +16,15 @@ type Entity struct {
 	Words []string
 }
 
-
 /**
  * データストアに単語を追加する
  * ajaxから呼び出すためのAPI
  */
 func add(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Text string `xml:"entry>content>properties>Text"`
+	}
+
 	var c appengine.Context
 	var u *user.User
 	var key *datastore.Key
@@ -30,7 +34,9 @@ func add(w http.ResponseWriter, r *http.Request) {
 	var resp *http.Response
 	var client *http.Client
 	var request *http.Request
-	var result []byte
+	var responseXML []byte
+	var result Result
+	var targetURL string
 	
 	c = appengine.NewContext(r)
 	u = user.Current(c)
@@ -49,16 +55,22 @@ func add(w http.ResponseWriter, r *http.Request) {
 	Check(c, err)
 
 	// 意味を付加する
-	request, err = http.NewRequest("GET", "https://api.datamarket.azure.com/Bing/MicrosoftTranslator/v1/Translate?Text=%27word%27&To=%27ja%27", nil)
+	targetURL = fmt.Sprintf("https://api.datamarket.azure.com/Bing/MicrosoftTranslator/v1/Translate?Text=%%27%s%%27&To=%%27ja%%27", word)
+	request, err = http.NewRequest("GET", targetURL, nil)
 	Check(c, err)
 	request.SetBasicAuth("", "BY/r96i694uamK+xuSv/6PrzIkfjraA1XFXIhzJ/4tE=")
 	client = new(http.Client)
 	resp, err = client.Do(request)
 	Check(c, err)
-	result = make([]byte, 100)
-	_, err = resp.Body.Read(result)
+	responseXML = make([]byte, 2048)
+	_, err = resp.Body.Read(responseXML)
 	Check(c, err)
-	log.Printf("%s", result)
+	
+	// xml解析
+	result = Result{Text: "none"}
+	err = xml.Unmarshal(responseXML, &result)
+	Check(c, err)
+	log.Printf("%s", result.Text)
 	
 	// 現在の単語数を返す
 	fmt.Fprintf(w, "{\"wordnum\":%d, \"status\":\"%s\"}", len(entity.Words), resp.Status)
