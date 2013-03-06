@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"text/template"
 	"appengine"
-//	"appengine/user"
-//	"strings"
+	"appengine/user"
+	"encoding/json"
 )
 
 /**
@@ -18,28 +18,28 @@ func play(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	var c appengine.Context
-//	var u *user.User
+	var u *user.User
 	var contents *Contents
 	var err error
 	var page *template.Template
-//	var words []string
-
+	var entities []Entity
+	var bytes []byte
+	
 	c = appengine.NewContext(r)
-//	u = user.Current(c)
+	u = user.Current(c)
 	
 	// 単語一覧を取得
+	entities = get(c, u)
+	
+	// JSONに変換
+	bytes, err = json.Marshal(entities)
+	Check(c, err)
 	contents = new(Contents)
-//	words = get(c, u)
+	contents.Words = string(bytes)
 	
 	// ページテンプレート取得
 	page, err = template.ParseFiles("server/play.html")
 	Check(c, err)
-	
-	// 単語一覧をHTML内に書き込む
-//	for i := 0; i < len(words); i++ {
-//		words[i] = strings.Join([]string{"\"", words[i], "\""}, "")
-//	}
-//	contents.Words = strings.Join(words, ",")
 	
 	// 表示
 	page.Execute(w, contents)

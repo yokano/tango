@@ -8,16 +8,16 @@ $(function() {
 		event.preventDefault();
 	});
 	
-	// Microsoft Translate API へ接続
-	$.ajax({
-		url: 'http://api.microsofttranslator.com/V2/Ajax.svc/GetAppIdToken',
-		method: 'get',
-		datatype: 'json',
-		error: function() {
-			console.log('error');
-		},
-		success: function(data) {
-			console.log(data);
-		}
-	});
+	
+//	wordTemplate = `
+//		<div data-role="page" id="%d">
+//			<div data-role="content">
+//				<div class="word">%s</div>
+//				<div class="meaning">%s</div>
+//			</div>
+//			<div class="trashbox">
+//				<img src="/client/trashbox.png" />
+//			</div>
+//		</div>
+//	`
 });

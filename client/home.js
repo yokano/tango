@@ -21,7 +21,6 @@ $(function() {
 			dataType: 'json',
 			async: false,
 			success: function(data) {
-				console.log(data);
 				if(data.wordnum > 1) {
 					words.html(words.html() + ', ' + word.val());
 				} else {

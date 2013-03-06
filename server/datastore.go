@@ -12,7 +12,7 @@ import (
 
 // データストアのデータ型
 type Entity struct {
-	UserID string
+	UserID string `json:"-"`
 	Word string
 	Meaning string
 }
@@ -38,6 +38,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 	var responseXML []byte
 	var result Result
 	var targetURL string
+	var entities []Entity
 	
 	c = appengine.NewContext(r)
 	u = user.Current(c)
@@ -75,7 +76,8 @@ func add(w http.ResponseWriter, r *http.Request) {
 	Check(c, err)
 	
 	// 現在の単語数を返す
-	fmt.Fprintf(w, "{\"wordnum\":0, \"status\":\"%s\"}", resp.Status)
+	entities = get(c, u)
+	fmt.Fprintf(w, "{\"wordnum\":%d, \"status\":\"%s\"}", len(entities), resp.Status)
 }
 
 /**
