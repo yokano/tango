@@ -95,6 +95,17 @@ $('#play').bind('pagebeforeshow', function() {
 	$('.trashbox').bind('tap', function(e) {
 		e.stopPropagation();
 		e.preventDefault();
+		
+		// データストアから単語を削除
+		var word = pages[current].find('.word').html();
+		$.ajax({
+			'url': '/delete',
+			'data': {
+				'word': word
+			}
+		});
+
+		// ページを削除
 		pages.splice(current, 1);
 		$.mobile.changePage(pages[current]);
 	});

@@ -8,6 +8,7 @@ import (
 func init() {
 	http.HandleFunc("/", top)
 	http.HandleFunc("/add", add)
+	http.HandleFunc("/delete", delete)
 	http.HandleFunc("/clear", clear)
 	http.HandleFunc("/play", play)
 }

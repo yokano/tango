@@ -95,8 +95,7 @@ func clear(w http.ResponseWriter, r *http.Request) {
 	
 	c = appengine.NewContext(r)
 	u = user.Current(c)
-	query = datastore.NewQuery("words")
-	query.Filter("UserID =", u.ID)
+	query = datastore.NewQuery("words").Filter("UserID =", u.ID)
 	count, err = query.Count(c)
 	Check(c, err)
 	entities = make([]Entity, count)
@@ -104,6 +103,40 @@ func clear(w http.ResponseWriter, r *http.Request) {
 	Check(c, err)
 	err = datastore.DeleteMulti(c, keys)
 	Check(c, err)
+}
+
+/**
+ * データストアから指定された単語を削除する
+ * API
+ */
+func delete(w http.ResponseWriter, r *http.Request) {
+	var c appengine.Context
+	var u *user.User
+	var query *datastore.Query
+	var word string
+	var iterator *datastore.Iterator
+	var key *datastore.Key
+	var err error
+	var entity Entity
+	
+	word = r.FormValue("word")
+	if(word == "") {
+		return
+	}
+
+	c = appengine.NewContext(r)
+	u = user.Current(c)
+	query = datastore.NewQuery("words").Filter("UserID =", u.ID).Filter("Word =", word)
+	iterator = query.Run(c)
+	
+	for ; ; {
+		key, err = iterator.Next(&entity)
+		if err != nil {
+			break
+		}
+		err = datastore.Delete(c, key)
+		Check(c, err)
+	}
 }
 
 /**
@@ -116,8 +149,7 @@ func get(c appengine.Context, u *user.User) []Entity {
 	var iterator *datastore.Iterator
 	var entity *Entity
 	
-	query = datastore.NewQuery("words")
-	query.Filter("UserID =", u.ID)
+	query = datastore.NewQuery("words").Filter("UserID =", u.ID)
 	Check(c, err)
 	
 	err = nil
