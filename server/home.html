@@ -11,10 +11,9 @@
 	</head>
 	<body>
 		<h1>単語帳オンライン</h1>
-		<div>あなたのID: {{.ID}}</div>
-		<div>あなたのユーザ名: {{.NAME}}</div>
+		<div>ユーザ名: {{.NAME}}</div>
 		<div>
-			<a href="{{.LOGOUT_URL}}">ログアウトする</a>
+			<a data-role="button" href="{{.LOGOUT_URL}}">ログアウトする</a>
 		</div>
 		<div>
 			<a href="/play" data-role="button">復習する</a>
@@ -24,9 +23,11 @@
 			{{.Words}}
 		</ul>
 		<div>
-			<input type="text" id="word" data-inline="true"></input>
-			<input data-role="button" value="追加する" id="add" data-inline="true"></input>
-			<input id="clear" type="button" data-theme="e" value="全消し"></input>
+			<div data-role="fieldcontain">
+				<input type="text" id="word"></input>
+				<div data-role="button" id="add" data-inline="true">追加する</div>
+			</div>
+				<div id="clear" data-role="button" data-theme="e">全消し</div>
 		</div>
 	</body>
 </html>

@@ -39,12 +39,12 @@ $('#play').bind('pagebeforeshow', function() {
 			<a href="/" data-role="button" data-icon="home" id="exit">やめる</a>\
 		</div>\
 	').appendTo($('body'));
-	$('#replay').bind('tap', function(e) {
+	$('#replay').bind('tap', function() {
 		for(var i = 0; i < pages.length - 1; i++) {
 			close(i);
 		}
 		current = 0;
-		$.mobile.changePage('#page' + current)
+		$.mobile.changePage(pages[current]);
 	});
 	
 	// スワイプでページ切り替え
@@ -66,13 +66,13 @@ $('#play').bind('pagebeforeshow', function() {
 		}
 	})
 	
-	// タップで意味表示
+	// 画面タップで意味表示
 	var open = function(pageID) {
 		if(!pages[pageID].open) {
 			pages[pageID].open = true;
-			$('#page' + pageID + ' .meaning').fadeIn('slow')
-			$('#page' + pageID + ' .trashbox').fadeIn('slow')
-			$('#page' + pageID + ' [data-role=content]').animate({
+			pages[pageID].find('.meaning').fadeIn('slow');
+			pages[pageID].find('.trashbox').fadeIn('slow');
+			pages[pageID].children().animate({
 				marginTop: '-50px'
 			});
 		}
@@ -80,9 +80,9 @@ $('#play').bind('pagebeforeshow', function() {
 	var close = function(pageID) {
 		if(pages[pageID].open) {
 			pages[pageID].open = false;
-			$('#page' + pageID + ' .meaning').hide();
-			$('#page' + pageID + ' .trashbox').hide();
-			$('#page' + pageID + ' [data-role=content]').animate({
+			pages[pageID].find('.meaning').hide();
+			pages[pageID].find('.trashbox').hide();
+			pages[pageID].children().animate({
 				marginTop: '0px'
 			});
 		}
@@ -91,5 +91,13 @@ $('#play').bind('pagebeforeshow', function() {
 		open(current);
 	});
 	
-	$.mobile.changePage($('#page0'));
+	// ゴミ箱をタップしたらページを削除
+	$('.trashbox').bind('tap', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		pages.splice(current, 1);
+		$.mobile.changePage(pages[current]);
+	});
+	
+	$.mobile.changePage(pages[current]);
 });
