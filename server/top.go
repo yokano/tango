@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"appengine"
 	"appengine/user"
-	"html/template"
+	"text/template"
 )
 
 /**

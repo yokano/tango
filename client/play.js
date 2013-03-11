@@ -3,7 +3,7 @@
  * var words に単語配列がサーバによって挿入されている
  * @property {Number} current 現在のページ
  */
-$('#play').bind('pagebeforeshow', function() {
+$('#play').bind('pageshow', function() {
 	var current = 0;
 	var pages = [];
 	
@@ -14,6 +14,10 @@ $('#play').bind('pagebeforeshow', function() {
 	
 	// CSSロード
 	$('<link rel="stylesheet" href="/client/play.css"></link>').appendTo($('body'));
+	
+	// 既に作成済みのページを削除
+	$('.wordpage').remove();
+	$('.endpage').remove();
 	
 	// 単語ページ作成
 	for(var i = 0; i < words.length; i++) {
@@ -33,7 +37,7 @@ $('#play').bind('pagebeforeshow', function() {
 	
 	// 終了ページ作成
 	pages[i] = $('\
-		<div data-role="page" id="page' + i + '">\
+		<div data-role="page" id="page' + i + '" class="endpage">\
 			<div>すべての単語が終わりました</div>\
 			<div data-role="button" data-icon="refresh" id="replay">もう１度</div>\
 			<a href="/" data-role="button" data-icon="home" id="exit">やめる</a>\

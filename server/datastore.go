@@ -1,10 +1,11 @@
 package tango
 
 import (
-	"net/http"
 	"appengine"
 	"appengine/datastore"
 	"appengine/user"
+	"appengine/urlfetch"
+	"net/http"
 	"strings"
 	"fmt"
 	"encoding/xml"
@@ -54,7 +55,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 	request, err = http.NewRequest("GET", targetURL, nil)
 	Check(c, err)
 	request.SetBasicAuth("", "BY/r96i694uamK+xuSv/6PrzIkfjraA1XFXIhzJ/4tE=")
-	client = new(http.Client)
+	client = urlfetch.Client(c)
 	resp, err = client.Do(request)
 	Check(c, err)
 	responseXML = make([]byte, 2048)
@@ -173,14 +174,13 @@ func get(c appengine.Context, u *user.User) []Entity {
 func getWordsHTML(c appengine.Context, u *user.User) string {
 	var result string
 	var entities []Entity
-	var delimiter string
-
+	var li string
+	
 	result = ""
-	delimiter = ""
 	entities = get(c, u)
 	for i := 0; i < len(entities); i++ {
-		result = strings.Join([]string{result, entities[i].Word}, delimiter)
-		delimiter = ", "
+		li = fmt.Sprintf("<li>%s</li>", entities[i].Word)
+		result = strings.Join([]string{result, li}, "")
 	}
 	
 	return result

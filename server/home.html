@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Home</title>
+		<title>単語帳オンライン</title>
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.css" />
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
@@ -10,24 +10,33 @@
 		<script src="/client/home.js"></script>
 	</head>
 	<body>
-		<h1>単語帳オンライン</h1>
-		<div>ユーザ名: {{.NAME}}</div>
-		<div>
-			<a data-role="button" href="{{.LOGOUT_URL}}">ログアウトする</a>
-		</div>
-		<div>
-			<a href="/play" data-role="button">復習する</a>
-		</div>
-		<h2>単語一覧</h2>
-		<ul>
-			{{.Words}}
-		</ul>
-		<div>
-			<div data-role="fieldcontain">
-				<input type="text" id="word"></input>
-				<div data-role="button" id="add" data-inline="true">追加する</div>
+		<div data-role="page" id="home">
+			<div data-role="header" data-position="fixed">
+				<h1>{{.NAME}}</h1>
+				<a data-icon="back" class="ui-btn-right" href="{{.LOGOUT_URL}}">ログアウト</a>
 			</div>
-				<div id="clear" data-role="button" data-theme="e">全消し</div>
+			<div data-role="content">
+				<h2>単語一覧</h2>
+				<ul id="words" data-role="listview">
+					{{.Words}}
+				</ul>
+				
+			</div>
+			<div data-role="footer" data-id="home" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a id="clear" data-icon="delete">全消し</a></li>
+						<li><a href="/play" data-icon="check">復習</a></li>
+						<li>
+							<a href="#addform" data-rel="popup" data-icon="edit">追加</a>
+							<div data-role="popup" id="addform" data-theme="a" data-position-to="window" style="padding:10px 20px;">
+								<input type="text" id="word"></input>
+								<button id="add" value="追加する"></button>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -9,16 +9,19 @@
 		<script src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
 	</head>
 	<body>
-		<h1>単語帳オンライン</h1>
-		<div>
-			単語帳オンラインへようこそ！<br/>
-			英文を読んでいる時にわからない単語を入力しておくだけで、<br/>
-			後から復習することができる無料サービスです。<br/>
-			英単語を入力するだけで日本語の意味は自動的に表示されるので簡単に使えます。<br/>
-			スマートフォンや携帯ゲーム機のブラウザでも動作します<br/>
-		</div>
-		<div>
-			<a href="{{.LOGIN_URL}}">こちらをクリックしてログインしてください</a>
+		<div data-role="page" id="login">
+			<div data-role="header">
+				<h1>単語帳オンライン</h1>
+				<a href="{{.LOGIN_URL}}" data-icon="forward" class="ui-btn-right">ログイン</a>
+			</div>
+			<div data-role="content">
+				単語帳オンラインへようこそ！<br/>
+				英文を読んでいる時にわからない単語を入力しておくだけで、<br/>
+				後から復習することができる無料サービスです。<br/>
+				英単語を入力するだけで日本語の意味は自動的に表示されるので簡単に使えます。<br/>
+				スマートフォンや携帯ゲーム機のブラウザでも動作します<br/>
+				画面右上のボタンでログインしてください。
+			</div>
 		</div>
 	</body>
 </html>

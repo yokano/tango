@@ -2,11 +2,11 @@ $(function() {
 	var word = $('#word');
 	var addButton = $('#add');
 	var clearButton = $('#clear');
-	var words = $('ul');
+	var words = $('#words');
 	
 	// 追加ボタンを押したら単語を追加
-	addButton.bind('click', function() {
-	
+	addButton.bind('tap', function(e) {
+				
 		// 入力チェック
 		if(word.val() == '') {
 			return;
@@ -18,14 +18,11 @@ $(function() {
 			data: {
 				word: word.val()
 			},
-			dataType: 'json',
 			async: false,
+			dataType: 'json',
 			success: function(data) {
-				if(data.wordnum > 1) {
-					words.html(words.html() + ', ' + word.val());
-				} else {
-					words.html(word.val());
-				}
+				$('<li>' + word.val() + '</li>').appendTo(words);
+				words.listview('refresh');
 				word.val('');
 			},
 			error: function() {
@@ -42,9 +39,6 @@ $(function() {
 				async: false,
 				success: function() {
 					words.empty();
-				},
-				error: function() {
-					console.log('ERROR');
 				}
 			});
 		}
