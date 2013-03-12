@@ -2,7 +2,13 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:README.md">
+   </FileRef>
+   <FileRef
       location = "group:app.yaml">
+   </FileRef>
+   <FileRef
+      location = "group:LICENSE.txt">
    </FileRef>
    <FileRef
       location = "group:client">
