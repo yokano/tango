@@ -40,37 +40,42 @@ func add(w http.ResponseWriter, r *http.Request) {
 	var result Result
 	var targetURL string
 	var entities []Entity
+	var meaning string
 	
 	c = appengine.NewContext(r)
 	u = user.Current(c)
 	word = r.FormValue("word")
+	meaning = r.FormValue("meaning")
 	
 	// 単語一覧の読み込み
 	key = datastore.NewIncompleteKey(c, "words", nil)
 	entity = new(Entity)
 	datastore.Get(c, key, entity)
 
-	// 意味を付加する
-	targetURL = fmt.Sprintf("https://api.datamarket.azure.com/Bing/MicrosoftTranslator/v1/Translate?Text=%%27%s%%27&To=%%27ja%%27", word)
-	request, err = http.NewRequest("GET", targetURL, nil)
-	Check(c, err)
-	request.SetBasicAuth("", "BY/r96i694uamK+xuSv/6PrzIkfjraA1XFXIhzJ/4tE=")
-	client = urlfetch.Client(c)
-	resp, err = client.Do(request)
-	Check(c, err)
-	responseXML = make([]byte, 2048)
-	_, err = resp.Body.Read(responseXML)
-	Check(c, err)
-	
-	// xml解析
-	result = Result{Text: "none"}
-	err = xml.Unmarshal(responseXML, &result)
-	Check(c, err)
-	
+	// 意味が空白なら自動翻訳
+	if meaning == "" {
+		targetURL = fmt.Sprintf("https://api.datamarket.azure.com/Bing/MicrosoftTranslator/v1/Translate?Text=%%27%s%%27&To=%%27ja%%27", word)
+		request, err = http.NewRequest("GET", targetURL, nil)
+		Check(c, err)
+		request.SetBasicAuth("", "BY/r96i694uamK+xuSv/6PrzIkfjraA1XFXIhzJ/4tE=")
+		client = urlfetch.Client(c)
+		resp, err = client.Do(request)
+		Check(c, err)
+		responseXML = make([]byte, 2048)
+		_, err = resp.Body.Read(responseXML)
+		Check(c, err)
+		
+		// xml解析
+		result = Result{Text: "none"}
+		err = xml.Unmarshal(responseXML, &result)
+		Check(c, err)
+		meaning = result.Text
+	}
+
 	// 単語を追加
 	entity.UserID = u.ID
 	entity.Word = word
-	entity.Meaning = result.Text
+	entity.Meaning = meaning
 		
 	// データストアへの書き込み
 	key, err = datastore.Put(c, key, entity)
@@ -78,7 +83,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 	
 	// 現在の単語数を返す
 	entities = get(c, u)
-	fmt.Fprintf(w, "{\"wordnum\":%d, \"status\":\"%s\"}", len(entities), resp.Status)
+	fmt.Fprintf(w, "{\"wordnum\":%d}", len(entities))
 }
 
 /**

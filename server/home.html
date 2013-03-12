@@ -31,7 +31,15 @@
 						<li>
 							<a href="#addform" data-rel="popup" data-icon="edit">追加</a>
 							<div data-role="popup" id="addform" data-theme="a" data-position-to="window" style="padding:10px 20px;">
-								<input type="text" id="word"></input>
+								<div data-role="fieldcontain">
+									<label for="word">単語：</label>
+									<input type="text" name="word" id="word"></input>
+								</div>
+								<div data-role="fieldcontain">
+									<label for="meaning">意味：</label>
+									<input type="text" name="meaning" id="meaning"></input>
+									<span style="font-size:small">※空白では自動翻訳されます</span>
+								</div>
 								<button id="add" value="追加する"></button>
 							</div>
 						</li>

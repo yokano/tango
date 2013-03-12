@@ -3,6 +3,7 @@ $(function() {
 	var addButton = $('#add');
 	var clearButton = $('#clear');
 	var words = $('#words');
+	var meaning = $('#meaning');
 	
 	// 追加ボタンを押したら単語を追加
 	addButton.bind('tap', function(e) {
@@ -16,7 +17,8 @@ $(function() {
 		$.ajax({
 			url: '/add',
 			data: {
-				word: word.val()
+				word: word.val(),
+				meaning: meaning.val()
 			},
 			async: false,
 			dataType: 'json',
@@ -24,6 +26,7 @@ $(function() {
 				$('<li>' + word.val() + '</li>').appendTo(words);
 				words.listview('refresh');
 				word.val('');
+				meaning.val('');
 			},
 			error: function() {
 				console.log('ERROR');
