@@ -1,7 +1,18 @@
 .word {
 	font-size: 400%;
 	text-align: center;
-	margin-top: 150px;
+}
+
+@media (orientation:portrait) {
+	.word {
+		margin-top: 50%;
+	}
+}
+
+@media (orientation:landscape) {
+	.word {
+		margin-top: 25%;
+	}
 }
 
 .meaning {
